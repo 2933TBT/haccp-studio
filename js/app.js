@@ -233,7 +233,7 @@ function updatePageTitle() {
         const navEl = document.querySelector(`.nav-item[data-route="${routeKey}"]`);
         label = navEl?.textContent?.trim().replace(/^[\d]+[.:]\s*/, "").replace(/[📝📊📅🔍📋]/g, "").trim() || route.key;
     }
-    document.title = `${label}${prod} — HACCP Studio`;
+    document.title = `${label}${prod} — TBT-HACCP Studio`;
 }
 
 function updateSidebarActive() {

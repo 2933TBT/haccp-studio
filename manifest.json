@@ -1,6 +1,6 @@
 {
-  "name": "HACCP Studio",
-  "short_name": "HACCP Studio",
+  "name": "TBT-HACCP Studio",
+  "short_name": "TBT-HACCP Studio",
   "description": "HACCP書類自動生成ソフト / 厚生労働省「HACCPに沿った衛生管理」準拠",
   "start_url": "./",
   "display": "standalone",
