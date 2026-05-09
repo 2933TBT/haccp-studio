@@ -1,5 +1,5 @@
 // HACCP Studio — Service Worker (offline support)
-const CACHE_NAME = "haccp-studio-v2";
+const CACHE_NAME = "haccp-studio-v3";
 
 const APP_SHELL = [
     "./",
