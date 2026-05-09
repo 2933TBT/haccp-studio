@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HACCP Studio - HACCP書類自動生成ソフト</title>
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#2563eb">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-title" content="HACCP Studio">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="icon" href="icon.svg" type="image/svg+xml">
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+</head>
+<body>
+    <a href="#content" class="skip-link">メインコンテンツへスキップ</a>
+    <header class="topbar no-print">
+        <button class="hamburger no-print" id="btn-sidebar-toggle" aria-label="メニューを開く" aria-expanded="false" aria-controls="sidebar">
+            <span></span><span></span><span></span>
+        </button>
+        <div class="brand">
+            <div class="brand-mark">H</div>
+            <div>
+                <h1>HACCP Studio</h1>
+                <p>HACCP書類自動生成ソフト ／ 厚生労働省「HACCPに沿った衛生管理」準拠</p>
+            </div>
+        </div>
+        <nav class="topbar-actions" aria-label="メインツールバー">
+            <button class="btn btn-ghost" id="btn-load-sample" title="冷凍唐揚げのサンプルを読み込み">サンプル読込</button>
+            <button class="btn btn-ghost" id="btn-new" title="入力をリセットしてウィザードを開始">+ 新規作成</button>
+            <button class="btn btn-ghost" id="btn-gen-all" title="ウィザード入力を元に、原則1〜7の全様式の雛形を一括生成">✨ 雛形一括生成</button>
+            <button class="btn btn-ghost" id="btn-import">JSON取込</button>
+            <button class="btn btn-ghost" id="btn-export-json">JSON出力</button>
+            <button class="btn btn-ghost" id="btn-export-pdf" title="現在の書類をPDF印刷">PDF印刷</button>
+            <button class="btn btn-primary" id="btn-export-excel" title="全書類をExcelファイルに出力">全書類をExcel</button>
+            <input type="file" id="file-import" accept="application/json" hidden>
+        </nav>
+    </header>
+
+    <div class="layout">
+        <aside class="sidebar no-print" id="sidebar" aria-label="ナビゲーション">
+            <div class="sidebar-section">
+                <div class="sidebar-title">概要</div>
+                <div class="sidebar-items">
+                    <button class="nav-item" data-route="#/dashboard">ダッシュボード</button>
+                    <button class="nav-item" data-route="#/wizard">製品情報入力ウィザード</button>
+                </div>
+            </div>
+            <div class="sidebar-section">
+                <div class="sidebar-title">原則1〜7 入力 (TBT様式)<span class="st-arrow">▼</span></div>
+                <div class="sidebar-items">
+                    <button class="nav-item" data-route="#/p/ingredient-desc">原料記述書（9-1）</button>
+                    <button class="nav-item" data-route="#/p/hazard-extractions">危害抽出書</button>
+                    <button class="nav-item" data-route="#/p/hazard-evaluations">ハザード評価表（原則1）</button>
+                    <button class="nav-item" data-route="#/p/control-measures">管理手段選択分類表（原則2）</button>
+                    <button class="nav-item" data-route="#/p/oprp-plan">O-PRPプラン（原則3〜7）</button>
+                    <button class="nav-item" data-route="#/p/ccp-plan">HACCPプラン（原則3〜7）</button>
+                    <button class="nav-item" data-route="#/p/verifications">検証記録（原則6）</button>
+                </div>
+            </div>
+            <div class="sidebar-section">
+                <div class="sidebar-title">日常管理記録<span class="st-arrow">▼</span></div>
+                <div class="sidebar-items">
+                    <button class="nav-item" data-route="#/p/ccp-monitoring-log">CCPモニタリング</button>
+                    <button class="nav-item" data-route="#/p/receiving-log">原材料受入</button>
+                    <button class="nav-item" data-route="#/p/sanitation-log">衛生点検・清掃消毒</button>
+                    <button class="nav-item" data-route="#/p/health-log">従事者健康確認</button>
+                    <button class="nav-item" data-route="#/p/temperature-log">冷蔵・冷凍温度</button>
+                    <button class="nav-item" data-route="#/p/water-log">使用水確認</button>
+                    <button class="nav-item" data-route="#/p/allergen-log">アレルゲン切替確認</button>
+                    <button class="nav-item" data-route="#/p/production-log">製造工程日報</button>
+                </div>
+            </div>
+            <div class="sidebar-section">
+                <div class="sidebar-title">品質・検査記録<span class="st-arrow">▼</span></div>
+                <div class="sidebar-items">
+                    <button class="nav-item" data-route="#/p/product-test-log">製品検査</button>
+                    <button class="nav-item" data-route="#/p/label-check-log">食品表示確認</button>
+                    <button class="nav-item" data-route="#/p/environment-log">環境モニタリング</button>
+                    <button class="nav-item" data-route="#/p/calibration-log">機器校正</button>
+                    <button class="nav-item" data-route="#/p/shipment-log">製品出荷</button>
+                </div>
+            </div>
+            <div class="sidebar-section">
+                <div class="sidebar-title">施設・衛生管理<span class="st-arrow">▼</span></div>
+                <div class="sidebar-items">
+                    <button class="nav-item" data-route="#/p/pest-control-log">害虫防除</button>
+                    <button class="nav-item" data-route="#/p/facility-log">施設設備点検</button>
+                </div>
+            </div>
+            <div class="sidebar-section">
+                <div class="sidebar-title">不適合・改善管理<span class="st-arrow">▼</span></div>
+                <div class="sidebar-items">
+                    <button class="nav-item" data-route="#/p/complaint-log">クレーム対応</button>
+                    <button class="nav-item" data-route="#/p/nonconformance-actions">不適合製品処置書（4-2）</button>
+                    <button class="nav-item" data-route="#/p/nonconformance-log">不適合管理表（4-3）</button>
+                    <button class="nav-item" data-route="#/p/corrective-actions">是正処置書（5-1）</button>
+                    <button class="nav-item" data-route="#/p/recall-log">製品回収記録</button>
+                </div>
+            </div>
+            <div class="sidebar-section">
+                <div class="sidebar-title">教育・監査・評価<span class="st-arrow">▼</span></div>
+                <div class="sidebar-items">
+                    <button class="nav-item" data-route="#/p/training-log">教育訓練記録</button>
+                    <button class="nav-item" data-route="#/p/internal-audit">内部監査チェックリスト</button>
+                    <button class="nav-item" data-route="#/p/supplier-audit">仕入先評価記録</button>
+                    <button class="nav-item" data-route="#/p/annual-review">📝 年次HACCPレビュー</button>
+                </div>
+            </div>
+            <div class="sidebar-section collapsed">
+                <div class="sidebar-title">HACCP 12 手順 書類<span class="st-arrow">▼</span></div>
+                <div class="sidebar-items">
+                    <button class="nav-item" data-route="#/doc/team">手順1: HACCPチーム名簿</button>
+                    <button class="nav-item" data-route="#/doc/spec">手順2: 製品説明書</button>
+                    <button class="nav-item" data-route="#/doc/usage">手順3: 使用方法</button>
+                    <button class="nav-item" data-route="#/doc/flow">手順4: フローダイアグラム</button>
+                    <button class="nav-item" data-route="#/doc/onsite">手順5: 現場確認記録</button>
+                    <button class="nav-item" data-route="#/doc/hazards">手順6: 危害要因分析表</button>
+                    <button class="nav-item" data-route="#/doc/ccp">手順7: CCP整理表</button>
+                    <button class="nav-item" data-route="#/doc/cl">手順8: 管理基準(CL)</button>
+                    <button class="nav-item" data-route="#/doc/monitoring">手順9: モニタリング</button>
+                    <button class="nav-item" data-route="#/doc/corrective">手順10: 改善措置</button>
+                    <button class="nav-item" data-route="#/doc/verification">手順11: 検証方法</button>
+                    <button class="nav-item" data-route="#/doc/records">手順12: 記録一覧</button>
+                </div>
+            </div>
+            <div class="sidebar-section collapsed">
+                <div class="sidebar-title">付帯書類・分析ツール<span class="st-arrow">▼</span></div>
+                <div class="sidebar-items">
+                    <button class="nav-item" data-route="#/doc/prp">一般衛生管理計画</button>
+                    <button class="nav-item" data-route="#/doc/all">全書類プレビュー</button>
+                    <button class="nav-item" data-route="#/p/monthly-report">📊 月次HACCP報告書</button>
+                    <button class="nav-item" data-route="#/p/annual-calendar">📅 年間管理カレンダー</button>
+                    <button class="nav-item" data-route="#/p/lot-trace">🔍 ロット追跡照会</button>
+                    <button class="nav-item" data-route="#/p/document-register">📋 文書管理台帳</button>
+                </div>
+            </div>
+            <div class="sidebar-footer">
+                <div class="status-pill" id="save-status">自動保存待機中</div>
+                <button class="btn btn-ghost btn-tiny" id="btn-reset" title="入力を消去">入力をリセット</button>
+            </div>
+        </aside>
+
+        <main class="content" id="content">
+            <!-- views render here -->
+        </main>
+    </div>
+
+    <div class="sidebar-overlay" id="sidebar-overlay" hidden></div>
+    <div class="toast" id="toast" role="status" aria-live="polite" hidden></div>
+
+    <script type="module" src="js/app.js"></script>
+    <script>
+        if ("serviceWorker" in navigator) {
+            window.addEventListener("load", () => {
+                navigator.serviceWorker.register("./sw.js").catch(() => {});
+            });
+        }
+    </script>
+</body>
+</html>
